@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         // Configurar nombres de rutas
         routes: {
           '/menu': (context) => MainMenuScreen(),
+          '/login': (context) => LoginScreen(),
         },
         home: LoginScreen(),
       ),

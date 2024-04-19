@@ -68,8 +68,21 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: TextButton(
                 onPressed: () {
-                  //print(_codigoEmpleado.text);
+                  print(_codigoEmpleado.text);
                   Navigator.pushNamed(context, '/menu');
+                  AlertDialog(
+                    title: const Text("Ingresar Monto de apertura de caja"),
+                    content: const Text(" Monto "),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          //Navigator.of(context).pop();
+                          Navigator.pushNamed(context, '/menu');
+                        },
+                        child: const Text("Ingresar Monto"),
+                      ),
+                    ],
+                  );
                 },
                 child: const Text(
                   'Ingresar',
