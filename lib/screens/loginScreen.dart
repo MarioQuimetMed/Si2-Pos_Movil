@@ -67,9 +67,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     BorderRadius.circular(10), // Agrega bordes redondeados
               ),
               child: TextButton(
-                onPressed: () {
-                  //print(_codigoEmpleado.text);
-                  Navigator.pushNamed(context, '/menu');
+                onPressed: () async {
+                  final TextEditingController _textFieldController =
+                      TextEditingController();
+                  return showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Ingresar Monto de Apertura de Caja'),
+                        content: TextField(
+                          controller: _textFieldController,
+                          decoration: InputDecoration(hintText: "Monto Bs."),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              print(_textFieldController.text);
+                              Navigator.pushNamed(context, '/menu');
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 child: const Text(
                   'Ingresar',
