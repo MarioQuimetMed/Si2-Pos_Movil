@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pos_si2_movil/Widgets/Producto.dart';
+import 'package:pos_si2_movil/models/producto/ProductoPostSale.dart';
 
 class ProductoCart {
   final Producto producto;
@@ -40,6 +41,17 @@ class CartProvider with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  ProductPostSale toProductPostSale() {
+    List<Product> products = _items.map((item) {
+      return Product(
+        productId: item.producto.id, // Assuming `id` is the product ID
+        cant: item.quantity,
+      );
+    }).toList();
+
+    return ProductPostSale(products: products);
   }
 
   void incrementQuantity(Producto product) {

@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pos_si2_movil/api/compras_api.dart';
+import 'package:pos_si2_movil/models/producto/ProductoPostSale.dart';
 import 'package:pos_si2_movil/screens/Menu/caja/TipoDeCobro/cobroSuccess.dart';
 
 class CobroEfectivoScreen extends StatefulWidget {
   final double totalAmount; // Este valor debe ser pasado a la pantalla
+  ProductPostSale productos;
+  String correo;
 
-  const CobroEfectivoScreen({super.key, required this.totalAmount});
+  CobroEfectivoScreen(
+      {super.key,
+      required this.totalAmount,
+      required this.productos,
+      required this.correo});
 
   @override
   _CobroEfectivoScreenState createState() => _CobroEfectivoScreenState();
@@ -13,6 +21,7 @@ class CobroEfectivoScreen extends StatefulWidget {
 class _CobroEfectivoScreenState extends State<CobroEfectivoScreen> {
   final TextEditingController _paymentController = TextEditingController();
   double _change = 0.0;
+  final comprasApi = ComprasApi();
 
   @override
   void initState() {
@@ -36,10 +45,31 @@ class _CobroEfectivoScreenState extends State<CobroEfectivoScreen> {
 
   Future<void> cobrarVenta() async {
     // Implementar la lógica para cobrar la venta
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CobroSuccessScreen()),
-    );
+    try {
+      final response = await comprasApi.compraPago(
+          _change,
+          double.tryParse(_paymentController.text)!,
+          'EFECTIVO',
+          widget.productos,
+          widget.correo);
+      if (response.statusCode == 201) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CobroSuccessScreen(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cobrar la venta: ${response.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      throw Exception('Error al cobrar la venta: $e');
+    }
   }
 
   @override
@@ -87,7 +117,9 @@ class _CobroEfectivoScreenState extends State<CobroEfectivoScreen> {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Procesando Pago...')),
                 // );
-                cobrarVenta();
+                if (_change >= 0) {
+                  cobrarVenta();
+                }
               },
               child: const Text('Pagar',
                   style: TextStyle(fontSize: 18, color: Colors.white)),

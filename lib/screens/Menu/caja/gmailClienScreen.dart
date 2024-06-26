@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pos_si2_movil/Widgets/cartProvider.dart';
 import 'package:pos_si2_movil/Widgets/indexText.dart';
 import 'package:pos_si2_movil/screens/Menu/caja/cobrarScreen.dart';
+import 'package:provider/provider.dart';
 
 class GmailClientScreen extends StatefulWidget {
   final total;

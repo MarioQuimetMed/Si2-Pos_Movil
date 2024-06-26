@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pos_si2_movil/api/compras_api.dart';
+import 'package:pos_si2_movil/models/producto/ProductoPostSale.dart';
 import 'package:pos_si2_movil/screens/Menu/caja/TipoDeCobro/cobroSuccess.dart';
 
 class CobroTarjetaScreen extends StatefulWidget {
-  const CobroTarjetaScreen({super.key});
+  double pago;
+  ProductPostSale productos;
+  String correo;
+
+  CobroTarjetaScreen(
+      {super.key,
+      required this.pago,
+      required this.productos,
+      required this.correo});
 
   @override
   _CobroTarjetaScreenState createState() => _CobroTarjetaScreenState();
@@ -11,6 +21,32 @@ class CobroTarjetaScreen extends StatefulWidget {
 class _CobroTarjetaScreenState extends State<CobroTarjetaScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _cardNumberController = TextEditingController();
+  final comprasApi = ComprasApi();
+
+  Future<void> cobrarVenta() async {
+    // Implementar la lógica para cobrar la venta
+    try {
+      final response = await comprasApi.compraPago(
+          0, widget.pago, 'TARJETA', widget.productos, widget.correo);
+      if (response.statusCode == 201) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CobroSuccessScreen(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cobrar la venta: ${response.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      throw Exception('Error al cobrar la venta: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +90,7 @@ class _CobroTarjetaScreenState extends State<CobroTarjetaScreen> {
                     //     const SnackBar(content: Text('Procesando Pago...')),
                     //   );
                     // }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CobroSuccessScreen()),
-                    );
+                    cobrarVenta();
                   },
                   child: const Text('Pagar',
                       style: TextStyle(fontSize: 18, color: Colors.white)),

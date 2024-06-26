@@ -1,25 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:pos_si2_movil/api/compras_api.dart';
+import 'package:pos_si2_movil/models/producto/ProductoPostSale.dart';
 import 'package:pos_si2_movil/screens/Menu/caja/TipoDeCobro/cobroSuccess.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CobroQrScreen extends StatefulWidget {
-  const CobroQrScreen({super.key});
+  double pago;
+  ProductPostSale productos;
+  String correo;
+  CobroQrScreen(
+      {super.key,
+      required this.pago,
+      required this.productos,
+      required this.correo});
 
   @override
   State<CobroQrScreen> createState() => _CobroQrScreenState();
 }
 
 class _CobroQrScreenState extends State<CobroQrScreen> {
+  final comprasApi = ComprasApi();
   @override
   void initState() {
     super.initState();
     // Redirigir a /menu después de 5 segundos
     Future.delayed(const Duration(seconds: 5), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CobroSuccessScreen()),
-      );
+      cobrarVenta();
     });
+  }
+
+  Future<void> cobrarVenta() async {
+    // Implementar la lógica para cobrar la venta
+    try {
+      final response = await comprasApi.compraPago(
+          0, widget.pago, 'QR', widget.productos, widget.correo);
+      if (response.statusCode == 201) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CobroSuccessScreen(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cobrar la venta: ${response.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      throw Exception('Error al cobrar la venta: $e');
+    }
   }
 
   @override

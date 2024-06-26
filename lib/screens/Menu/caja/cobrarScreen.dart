@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pos_si2_movil/Widgets/cartProvider.dart';
 import 'package:pos_si2_movil/screens/Menu/caja/TipoDeCobro/cobroEfectivoScreen.dart';
 import 'package:pos_si2_movil/screens/Menu/caja/TipoDeCobro/cobroQrScreen.dart';
 import 'package:pos_si2_movil/screens/Menu/caja/TipoDeCobro/cobroTarjetaScreen.dart';
+import 'package:provider/provider.dart';
 
 class CobrarScreen extends StatelessWidget {
   final double total;
@@ -11,6 +13,9 @@ class CobrarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cart = Provider.of<CartProvider>(context);
+    var productos = cart.toProductPostSale();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -37,6 +42,8 @@ class CobrarScreen extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => CobroEfectivoScreen(
                             totalAmount: total,
+                            correo: emailCliente,
+                            productos: productos,
                           )),
                 );
               },
@@ -52,7 +59,11 @@ class CobrarScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CobroTarjetaScreen()),
+                      builder: (context) => CobroTarjetaScreen(
+                            correo: emailCliente,
+                            productos: productos,
+                            pago: total,
+                          )),
                 );
               },
             ),
@@ -67,7 +78,11 @@ class CobrarScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CobroQrScreen()),
+                      builder: (context) => CobroQrScreen(
+                            correo: emailCliente,
+                            productos: productos,
+                            pago: total,
+                          )),
                 );
               },
             ),
