@@ -17,20 +17,27 @@ class ComprasApi {
     final idCaja = prefs.getInt('idCaja');
     final idSucursal = prefs.getInt('idSucursal');
     try {
-      final response = await http.post(Uri.parse('$baseUrl/sales'), headers: {
-        'service-token': token!,
-        'subdomain': subdominio!,
-      }, body: {
-        "atmId": idCaja,
-        "branchId": idSucursal,
-
-        "clientId": correo,
-        // "nitClient": "",
+      final body = jsonEncode({
+        // Usa jsonEncode para convertir todo el cuerpo a una cadena JSON
+        "atmId": idCaja, // Convierte a String
+        "branchId": idSucursal, // Convierte a String
+        "client": correo,
         "change": cambio.toStringAsFixed(2),
         "pay": pago.toStringAsFixed(2),
         "type": metodoPago,
-        "products": productos.toJson(),
+        "products": productos
+            .getFormattedProducts(), // Asegúrate de que esto devuelva una lista de objetos
       });
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/sales'),
+        headers: {
+          'service-token': token!,
+          'subdomain': subdominio!,
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Si la solicitud fue exitosa, devuelve el token de acceso

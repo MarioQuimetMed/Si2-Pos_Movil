@@ -26,6 +26,15 @@ class ProductPostSale {
   Map<String, dynamic> toJson() => {
         "products": List<dynamic>.from(products.map((x) => x.toJson())),
       };
+
+  List<Map<String, dynamic>> getFormattedProducts() {
+    return products.map((product) {
+      return {
+        "productId": product.productId,
+        "cant": product.cant,
+      };
+    }).toList();
+  }
 }
 
 class Product {

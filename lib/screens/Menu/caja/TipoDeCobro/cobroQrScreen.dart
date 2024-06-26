@@ -44,13 +44,13 @@ class _CobroQrScreenState extends State<CobroQrScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error al cobrar la venta: ${response.message}'),
+            content: Text('Error venta: ${response.message}'),
             backgroundColor: Colors.red,
           ),
         );
       }
     } catch (e) {
-      throw Exception('Error al cobrar la venta: $e');
+      throw Exception('Error venta : $e');
     }
   }
 
