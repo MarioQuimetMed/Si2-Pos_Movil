@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:pos_si2_movil/Widgets/cartProvider.dart';
 import 'package:pos_si2_movil/provider/authProvider.dart';
-import 'package:pos_si2_movil/screens/loginScreen.dart';
-import 'package:pos_si2_movil/screens/mainMenuScreen.dart';
+import 'package:pos_si2_movil/screens/auth/aperturaCajaScreen.dart';
+import 'package:pos_si2_movil/screens/Menu/caja/cierreCajaScreen.dart';
+import 'package:pos_si2_movil/screens/auth/loginScreen.dart';
+import 'package:pos_si2_movil/screens/Menu/mainMenuScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthProvider(),
-      child: MyApp(),
-    ),
-  );
+void main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => AuthProvider()),
+      ChangeNotifierProvider(create: (context) => CartProvider()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,6 +37,9 @@ class MyApp extends StatelessWidget {
         // Configurar nombres de rutas
         routes: {
           '/menu': (context) => MainMenuScreen(),
+          '/login': (context) => LoginScreen(),
+          '/apertura': (context) => AperturaScreen(),
+          '/cierreCaja': (context) => CierreCajaScreen(),
         },
         home: LoginScreen(),
       ),
