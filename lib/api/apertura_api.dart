@@ -17,7 +17,7 @@ class AperturaApi {
   static String? baseUrl = dotenv.env['API_URL'];
 
   Future<List<Sucursal>> getSucursales() async {
-    final url = Uri.parse('$baseUrl/branch');
+    final url = Uri.parse('$baseUrl/control/branchs');
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('tokenTenant');
     final subdominio = prefs.getString('subdominio');
@@ -31,7 +31,7 @@ class AperturaApi {
         // Si la solicitud fue exitosa, devuelve el token de acceso
         final data = GetbranchResponse.fromJson(json.decode(response.body));
         List<Sucursal> sucursales = [];
-        for (var index in data.data.branchs) {
+        for (var index in data.data.branch) {
           sucursales.add(Sucursal.fromJson(index));
         }
         return sucursales;

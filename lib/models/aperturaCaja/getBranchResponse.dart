@@ -37,62 +37,62 @@ class GetbranchResponse {
 
 class Data {
   int total;
-  List<Branch> branchs;
+  List<Branch> branch;
 
   Data({
     required this.total,
-    required this.branchs,
+    required this.branch,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         total: json["total"],
-        branchs:
-            List<Branch>.from(json["branchs"].map((x) => Branch.fromJson(x))),
+        branch:
+            List<Branch>.from(json["branch"].map((x) => Branch.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "total": total,
-        "branchs": List<dynamic>.from(branchs.map((x) => x.toJson())),
+        "branch": List<dynamic>.from(branch.map((x) => x.toJson())),
       };
 }
 
 class Branch {
   int id;
-  String address;
-  bool status;
   String name;
-  String createdAt;
-  String updatedAt;
+  bool status;
   City city;
+  String address;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   Branch({
     required this.id,
-    required this.address,
-    required this.status,
     required this.name,
+    required this.status,
+    required this.city,
+    required this.address,
     required this.createdAt,
     required this.updatedAt,
-    required this.city,
   });
 
   factory Branch.fromJson(Map<String, dynamic> json) => Branch(
         id: json["id"],
-        address: json["address"],
-        status: json["status"],
         name: json["name"],
-        createdAt: json["createdAt"],
-        updatedAt: json["updatedAt"],
+        status: json["status"],
         city: City.fromJson(json["city"]),
+        address: json["address"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "address": address,
-        "status": status,
         "name": name,
-        "createdAt": createdAt,
-        "updatedAt": updatedAt,
+        "status": status,
         "city": city.toJson(),
+        "address": address,
+        "createdAt": createdAt.toIso8601String(),
+        "updatedAt": updatedAt.toIso8601String(),
       };
 }
 
